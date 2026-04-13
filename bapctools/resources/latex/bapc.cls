@@ -328,6 +328,7 @@
 	\par
 }
 \newcommand{\InteractiveWrite}[1]{
+	\begingroup
 	\noindent
 	\normalsize
 	\ttfamily
@@ -344,8 +345,10 @@
 	\nopagebreak
 	\vspace{-0.4em}
 	\par
+	\endgroup
 }
 \newcommand{\InteractiveRead}[1]{
+	\begingroup
 	\noindent
 	\normalsize
 	\ttfamily
@@ -362,6 +365,7 @@
 	\nopagebreak
 	\vspace{-0.4em}
 	\par%
+	\endgroup
 }
 
 \newcommand{\InteractivePass}[1]{
