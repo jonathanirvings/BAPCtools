@@ -293,7 +293,7 @@
 	\begin{tabularx}{0.983\textwidth}{X}%
 		\centering \large\bfseries\textrm{\langsamplecase{} \arabic{SampleCount}}%
 	\end{tabularx}
-  \par%
+	\par%
 	\nopagebreak[4]%
 }
 
@@ -328,10 +328,8 @@
 	\par
 }
 \newcommand{\InteractiveWrite}[1]{
-	\begingroup
 	\noindent
 	\normalsize
-	\ttfamily
 	\frenchspacing% to prevent extra spaces after punctuation. https://tex.stackexchange.com/q/118455/43242
 	\hfill\framebox[0.55\textwidth][l]{%
 		\parbox[t]{\dimexpr0.55\textwidth-2\fboxsep-2\fboxrule\relax}{
@@ -345,13 +343,10 @@
 	\nopagebreak
 	\vspace{-0.4em}
 	\par
-	\endgroup
 }
 \newcommand{\InteractiveRead}[1]{
-	\begingroup
 	\noindent
 	\normalsize
-	\ttfamily
 	\frenchspacing% to prevent extra spaces after punctuation. https://tex.stackexchange.com/q/118455/43242
 	\framebox[0.55\textwidth][l]{%
 		\parbox[t]{\dimexpr0.55\textwidth-2\fboxsep-2\fboxrule\relax}{
@@ -365,7 +360,6 @@
 	\nopagebreak
 	\vspace{-0.4em}
 	\par%
-	\endgroup
 }
 
 \newcommand{\InteractivePass}[1]{
