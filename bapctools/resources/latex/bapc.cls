@@ -106,7 +106,7 @@
 	\section{#1}
 	\vspace{-2.3em}
 	\hfill
-	\ifdefempty{\timelimit}{}{{\color{darkgray}\fontfamily{qcr}\langtimelimit{}: \timelimit{}s}}
+	\ifdefempty{\timelimit}{}{{\color{darkgray}\fontfamily{qcr}\langtimelimit{}: \timelimit{}\langseconds{}}}
 
 	\setcounter{SampleCount}{0}
 	\setcounter{figure}{0}
