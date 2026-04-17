@@ -420,7 +420,7 @@ def build_problem_zip(problem: Problem, output: Path) -> bool:
 
         export_dir = problem.tmpdir / "export"
         for f in sorted(export_dir.rglob("*")):
-            name = f.relative_to(export_dir / f"{problem.name}")
+            name = f.relative_to(export_dir)
             if f.is_file():
                 zf.write(f, name, compress_type=zipfile.ZIP_DEFLATED)
             if f.is_dir():
