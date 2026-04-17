@@ -48,9 +48,9 @@ def select_languages(problems: list[Problem]) -> list[str]:
             # Make sure "en" is first in the list by default, sort the rest alphabetically.
             key=lambda k: "" if k == "en" else k,
         )
-    if config.args.legacy and not config.args.kattis and len(languages) > 1:
-        # legacy DOMjudge can handle at most one language
-        fatal("Multiple languages found, please specify one with --lang")
+    # if config.args.legacy and not config.args.kattis and len(languages) > 1:
+    #     # legacy DOMjudge can handle at most one language
+    #     fatal("Multiple languages found, please specify one with --lang")
     if not languages:
         fatal("No language found")
     return languages
@@ -284,6 +284,13 @@ def build_problem_zip(problem: Problem, output: Path) -> bool:
                 file = export_dir / type.path(languages[0], ".pdf").name
                 if file.exists():
                     file.rename(remove_language_pdf_suffix(file, languages[0]))
+            # NOTE: hardcoded the following behavior:
+            # - copy `statement/problem.en.pdf` to `attachments/problem.en.pdf`
+            problem_en_path = export_dir / 'statement' / 'problem.en.pdf'
+            out_en_path = export_dir / 'attachments' / 'statement-en.pdf'
+            if problem_en_path.exists():
+              out_en_path.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(problem_en_path, out_en_path)
         else:
             for language in languages:
                 for type in PdfType:
