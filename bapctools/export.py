@@ -1,3 +1,4 @@
+import os
 import re
 import shutil
 import zipfile
@@ -54,6 +55,15 @@ def select_languages(problems: list[Problem]) -> list[str]:
     if not languages:
         fatal("No language found")
     return languages
+
+
+def get_extra_languages(problems: list[Problem]) -> list[str]:
+    languages = sorted(
+        set(sum((p.statement_languages for p in problems), [])),
+        # Make sure "en" is first in the list by default, sort the rest alphabetically.
+        key=lambda k: "" if k == "en" else k,
+    )
+    return list(set(languages) - set(select_languages(problems)))
 
 
 # Write any .lang.pdf files to .pdf.
@@ -147,6 +157,7 @@ def build_problem_zip(problem: Problem, output: Path) -> bool:
     from ruamel.yaml.comments import CommentedMap
 
     languages = select_languages([problem])
+    extra_languages = get_extra_languages([problem])
 
     files = [
         ("problem.yaml", True),
@@ -169,6 +180,8 @@ def build_problem_zip(problem: Problem, output: Path) -> bool:
             files.append((PdfType.PROBLEM.path(language, ".pdf").name, True))
             files.append((PdfType.PROBLEM_SLIDE.path(language, ".pdf").name, False))
             files.append((PdfType.SOLUTION.path(language, ".pdf").name, False))
+        for language in extra_languages:
+            files.append((PdfType.PROBLEM.path(language, ".pdf").name, True))
 
     if problem.custom_output:
         files.append((f"{OutputValidator.source_dir}/**/*", True))
@@ -284,6 +297,11 @@ def build_problem_zip(problem: Problem, output: Path) -> bool:
                 file = export_dir / type.path(languages[0], ".pdf").name
                 if file.exists():
                     file.rename(remove_language_pdf_suffix(file, languages[0]))
+            for language in extra_languages:
+                file = export_dir / PdfType.PROBLEM.path(language, ".pdf").name
+                attachment_dir = export_dir / "attachments"
+                os.makedirs(attachment_dir, exist_ok=True)
+                shutil.move(file, export_dir / "attachments" / f"statement-{language}.pdf")
         else:
             for language in languages:
                 for type in PdfType:
@@ -420,7 +438,7 @@ def build_problem_zip(problem: Problem, output: Path) -> bool:
 
         export_dir = problem.tmpdir / "export"
         for f in sorted(export_dir.rglob("*")):
-            name = f.relative_to(export_dir / f"{problem.name}")
+            name = f.relative_to(export_dir)
             if f.is_file():
                 zf.write(f, name, compress_type=zipfile.ZIP_DEFLATED)
             if f.is_dir():

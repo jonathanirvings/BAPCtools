@@ -431,22 +431,16 @@ def build_problem_pdfs(
     build all languages for which there is a statement latex source.
     """
     bar = PrintBar(problem.name)
-    if config.args.lang is not None:
-        for lang in config.args.lang:
-            if lang not in problem.statement_languages:
-                bar.fatal(f"No statement source for language {lang}")
-        languages = config.args.lang
-    else:
-        languages = problem.statement_languages
-        # For solutions or problem slides, filter for `<build_type>.<lang>.tex` files that exist.
-        if build_type != PdfType.PROBLEM:
-            filtered_languages = []
-            for lang in languages:
-                if (problem.path / build_type.path(lang)).exists():
-                    filtered_languages.append(lang)
-                else:
-                    bar.warn(f"{build_type.path(lang)} not found")
-            languages = filtered_languages
+    languages = problem.statement_languages
+    # For solutions or problem slides, filter for `<build_type>.<lang>.tex` files that exist.
+    if build_type != PdfType.PROBLEM:
+        filtered_languages = []
+        for lang in languages:
+            if (problem.path / build_type.path(lang)).exists():
+                filtered_languages.append(lang)
+            else:
+                bar.warn(f"{build_type.path(lang)} not found")
+        languages = filtered_languages
     if config.args.watch and len(languages) > 1:
         fatal("--watch does not work with multiple languages. Please use --lang")
     return all([build_problem_pdf(problem, lang, build_type, web) for lang in languages])
